@@ -1,12 +1,26 @@
 import { PrismaClient } from "@prisma/client";
+import bcrypt from "bcrypt";
 
 const prisma = new PrismaClient();
 
 export async function register(req: any, res: any) {
   try {
-    const { user_name, email, password, bio } = req.body;
+    const { user_name, email, rawPassword, bio } = req.body;
 
-    console.log({ user_name, email, password, bio });
+    if (!user_name)
+      return res.status(400).json({
+        message: "please Enter your User Name",
+      });
+    if (!email)
+      return res.status(400).json({
+        message: "please Enter your Email",
+      });
+    if (!rawPassword)
+      return res.status(400).json({
+        message: "please Enter your Password",
+      });
+
+    const password = await bcrypt.hash(rawPassword, 12);
 
     const result = await prisma.user.create({
       data: {
@@ -22,7 +36,7 @@ export async function register(req: any, res: any) {
         message: "Error in registration",
       });
     } else {
-     return res.status(201).json({
+      return res.status(201).json({
         message: "user created successfully",
         data: result,
       });

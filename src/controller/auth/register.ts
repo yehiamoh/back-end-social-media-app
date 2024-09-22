@@ -1,10 +1,26 @@
 import { PrismaClient } from "@prisma/client";
 import bcrypt from "bcrypt";
+import Joi from "joi";
 
 const prisma = new PrismaClient();
 
 export async function register(req: any, res: any) {
   try {
+
+    const schema= Joi.object({
+      user_name: Joi.string().min(3).max(30).required(),
+      email: Joi.string().email().required(),
+      rawPassword: Joi.string().min(8).required(),
+      bio: Joi.string().max(255).optional(),
+    });
+
+    const{error}= schema.validate(req.body);
+    if(error){
+      return res.status(400).json({
+        message:error.details[0].message
+      });
+    }
+
     const { user_name, email, rawPassword, bio } = req.body;
 
     if (!user_name)

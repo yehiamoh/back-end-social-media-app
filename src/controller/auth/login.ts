@@ -69,8 +69,9 @@ export async function login(req:Request,res:Response) {
 
    }
    catch(error:any){
-      res.status(500).json({
-         message:error.toString()
+      return res.status(500).json({
+         message: "An error occurred while login",
+         error: error.message
       });
    }
 }

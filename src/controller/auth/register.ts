@@ -57,7 +57,9 @@ export async function register(req: Request, res: Response) {
       });
     }
   } catch (error: any) {
-    res.status(500).json({ message: error.toString() });
-    console.log(`error in login function ${error}`);
+    return res.status(500).json({
+      message: "An error occurred while registration",
+      error: error.message
+   });
   }
 }

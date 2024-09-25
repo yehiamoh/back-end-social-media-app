@@ -1,11 +1,11 @@
-import {Response, NextFunction } from "express";
+import { Request, Response, NextFunction } from "express";
 import Jwt from "jsonwebtoken";
 import dotenv from "dotenv";
 
 dotenv.config();
 
- interface AuthRequest extends Request{
-   userId:string;
+interface AuthRequest extends Request {
+  userId?: string;
 }
 
 export function ensureAuthentication(
@@ -13,7 +13,7 @@ export function ensureAuthentication(
   res: Response,
   next: NextFunction
 ) {
-  const token = req.headers.get('authorization')?.split(' ')[1];
+  const token = req.headers.authorization;
   if (!token) {
     return res.status(401).json({
       message: "Access token missing",
@@ -24,11 +24,12 @@ export function ensureAuthentication(
       token,
       process.env.JWT_SECRET as string
     ) as Jwt.JwtPayload;
-    
-    req.userId=decodedAcsessToken.userId;
 
+    req.userId = decodedAcsessToken.userId;
     next();
   } catch (error: any) {
-    res.status(500).json({ message: error.toString() });
+    res.status(500).json({ message: "error in auth middle ware",
+      error:error.message
+    });
   }
 }

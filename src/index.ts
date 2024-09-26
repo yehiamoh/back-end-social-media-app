@@ -3,6 +3,7 @@ import dotenv from "dotenv";
 import bodyParser from "body-parser";
 
 import authRouter from "./routes/auth_router";
+import userRouter from "./routes/user_router";
 
 dotenv.config();
 
@@ -14,6 +15,7 @@ function start() {
     app.use(bodyParser.json());
 
     app.use("/api/v0/", authRouter);
+    app.use("/api/v0/", userRouter);
 
     app.listen(port, () => {
       console.log(`server is running on port ${port}`);

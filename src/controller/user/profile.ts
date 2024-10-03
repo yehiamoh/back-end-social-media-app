@@ -2,11 +2,11 @@ import { Request, Response, NextFunction } from "express";
 import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
-interface AuthRequest extends Request {
+ interface AuthRequest extends Request {
   userId?: string;
 }
 
-export async function getCurrentUser(
+export async function getProfile(
   req: AuthRequest,
   res: Response,
   next: NextFunction
@@ -18,7 +18,6 @@ export async function getCurrentUser(
       },
     });
 
-    //console.log(req.userId);
     if (!user) {
       return res.status(400).json({
         message: "Error in finding user",

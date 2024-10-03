@@ -8,16 +8,18 @@ datasource db {
 }
 
 model User {
-  user_id   String  @id @default(uuid())
-  user_name String
-  email     String  @unique
-  password  String
-  bio       String?
+  user_id    String   @id @default(uuid())
+  user_name  String
+  email      String   @unique
+  password   String
+  bio        String?
   created_At DateTime @default(now())
   updated_At DateTime @updatedAt
 
-  following  Follows[] @relation("FollowingRelation")
-  followers  Follows[] @relation("FollowersRelation")
+  following Follows[] @relation("FollowingRelation")
+  followers Follows[] @relation("FollowersRelation")
+
+  Posts Posts[] @relation("postAuthor")
 }
 
 model Follows {
@@ -25,8 +27,19 @@ model Follows {
   following_id String
   createdAt    DateTime @default(now())
 
-  follower   User @relation("FollowingRelation", fields: [follower_id], references: [user_id])
-  following  User @relation("FollowersRelation", fields: [following_id], references: [user_id])
+  follower  User @relation("FollowingRelation", fields: [follower_id], references: [user_id])
+  following User @relation("FollowersRelation", fields: [following_id], references: [user_id])
 
   @@id([follower_id, following_id]) // Composite primary key
+}
+
+model Posts {
+  post_id    String   @id @default(uuid())
+  user_id    String
+  content    String
+  media_url  String?
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  author User @relation("postAuthor", fields: [user_id], references: [user_id])
 }

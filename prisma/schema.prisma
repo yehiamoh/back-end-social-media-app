@@ -20,6 +20,10 @@ model User {
   followers Follows[] @relation("FollowersRelation")
 
   Posts Posts[] @relation("postAuthor")
+
+  comments Comments[]
+
+  like Likes[]
 }
 
 model Follows {
@@ -40,6 +44,32 @@ model Posts {
   media_url  String?
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
+  likes Likes[] 
+  comment Comments[]
 
   author User @relation("postAuthor", fields: [user_id], references: [user_id])
+}
+
+model Likes {
+  like_id String @id @default(uuid())
+  user_id String
+  post_id String 
+  created_at DateTime @default(now())
+  post Posts @relation(fields: [post_id],references: [post_id])
+  user User @relation(fields: [user_id],references: [user_id])
+   @@unique([post_id, user_id])
+}
+
+model Comments{
+  comment_id String @id @default(uuid())
+  post_id String
+  user_id String
+  text    String
+  created_At  DateTime @default(now())
+
+  post Posts @relation(fields: [post_id],references: [post_id])
+  user User @relation(fields: [user_id],references: [user_id])
+
+  @@unique([post_id,user_id])
+
 }

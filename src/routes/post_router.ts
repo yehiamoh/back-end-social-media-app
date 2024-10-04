@@ -15,7 +15,7 @@ const postRouter=express.Router();
 postRouter.get('/posts',getPosts);
 postRouter.post('/posts',ensureAuthentication,addPost);
 postRouter.get('/posts/:postId',getSinglePost);
-postRouter.get('/posts/:postId',ensureAuthentication,deletePost);
+postRouter.delete('/posts/:postId',ensureAuthentication,deletePost);
 postRouter.put('/posts/:postId',ensureAuthentication,updatePost);
 postRouter.post('/posts/:postId/like',ensureAuthentication,like);
 postRouter.delete('/posts/:postId/unlike',ensureAuthentication,unLike);

@@ -12,7 +12,6 @@ export async function updatePost(req: AuthRequest, res: Response) {
     const { postId } = req.params;
 
     const { content, mediaUrl } = req.body;
-    let currentMediaUrl = "";
 
     if (!content) {
       return res.status(400).json({
@@ -31,17 +30,14 @@ export async function updatePost(req: AuthRequest, res: Response) {
         message: "post arenot found",
       });
     }
-
-    !mediaUrl
-      ? currentMediaUrl != desiredPost.media_url
-      : (currentMediaUrl = mediaUrl);
+    const currentMediaUrl = mediaUrl || desiredPost.media_url;
 
     if (desiredPost?.user_id !== userId) {
       return res.status(401).json({
         message: "user are not authorized",
       });
     }
-    const postUpdate = await prisma.posts.update({
+    const updatedPost = await prisma.posts.update({
       where: {
         post_id: postId,
       },
@@ -51,11 +47,15 @@ export async function updatePost(req: AuthRequest, res: Response) {
       },
     });
 
-    if (!postUpdate) {
+    if (!updatedPost) {
       return res.status(404).json({
         message: "error in postDeletion",
       });
     }
+    return res.status(200).json({
+      message: "Post updated successfully",
+      post: updatedPost, // Return the updated post
+    });
   } catch (error: any) {
     return res.status(500).json({
       message: "An error occurred in deleting post",

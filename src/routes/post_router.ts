@@ -18,7 +18,7 @@ postRouter.get('/posts/:postId',getSinglePost);
 postRouter.get('/posts/:postId',ensureAuthentication,deletePost);
 postRouter.put('/posts/:postId',ensureAuthentication,updatePost);
 postRouter.post('/posts/:postId/like',ensureAuthentication,like);
-postRouter.delete('/posts/:postId',ensureAuthentication,unLike);
+postRouter.delete('/posts/:postId/unlike',ensureAuthentication,unLike);
 postRouter.post('/posts/:postId/comment',ensureAuthentication,addCommnet);
 postRouter.get('/posts/:postId/comment',ensureAuthentication,getComments);
 
